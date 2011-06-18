@@ -23,5 +23,15 @@ include_directories(${Boost_INCLUDE_DIR})
 find_package(SFML REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
+find_package(Freetype REQUIRED)
+include_directories(${FREETYPE_INCLUDE_DIRS})
+
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_PATH})
+
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_PATH})
+
 add_subdirectory(src) 
+
 
