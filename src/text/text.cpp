@@ -101,8 +101,6 @@ t_text::t_text(int textSize , bool subpixel)
    int lastTexture;
    glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
 
-   glEnable(GL_TEXTURE_2D);
-
    glGenTextures(1,&texture);
    checkGLError();
 

@@ -35,6 +35,16 @@ include_directories(${OPENGL_INCLUDE_PATH})
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIR})
 
+include_directories(lib/jsoncpp-src-0.5.0/include)
+
+message(${CMAKE_HOME_DIRECTORY})
+
+set(JSONCPPLIB
+   ${CMAKE_HOME_DIRECTORY}/lib/jsoncpp-src-0.5.0/libs/linux-gcc-4.5.3/libjson_linux-gcc-4.5.3_libmt.a)
+
+add_library(jsoncpp STATIC IMPORTED)
+set_target_properties(jsoncpp PROPERTIES IMPORTED_LOCATION ${JSONCPPLIB})
+
 add_subdirectory(src) 
 
 

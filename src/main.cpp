@@ -5,6 +5,7 @@
 #include "glUtil.h"
 #include "matrix.h"
 #include "pngUtil.h"
+#include "pngList.h"
 #include "render.h"
 #include "renderList.h"
 
@@ -25,6 +26,9 @@ int main(int argv, char **argc)
    t_render blah("../res/frag","../res/vert");
    blah.loadImage("../res/blah.png");
    blah.perspectiveOrtho(0,100,100, 0, -5, 5);
+
+   t_pngList imageList("../res/pixelPacker.png","../res/pixelPacker.json");
+   imageList.addImage("5",10,10,1);
 
    t_text text(20);
    text.setSize(800,600);
@@ -69,6 +73,7 @@ int main(int argv, char **argc)
    
       list.draw();
       lazyDogText.draw();
+      imageList.draw();
 
       checkGLError();
       App.Display();

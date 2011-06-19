@@ -10,5 +10,5 @@ set(SRCS
 )
  
 add_library(pngUtil ${HDRS} ${SRCS})
-target_link_libraries(pngUtil glUtil ${PNG_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_LIBRARY})
+target_link_libraries(pngUtil glUtil jsoncpp ${PNG_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_LIBRARY})
 

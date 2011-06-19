@@ -94,14 +94,17 @@ t_render::t_render(const std::string &frag, const std::string &vert, int numOfRe
    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_BLEND);
 
+
    createAndBindBuffers(numOfRects);
    activateProgram(program);
    bindTexture();
-
 }
 
 void t_render::bindTexture()
 {
+   glEnable(GL_TEXTURE_2D);
+   checkGLError();
+
    glActiveTexture(GL_TEXTURE0);
    checkGLError();
 
