@@ -29,22 +29,35 @@ T nexthigher(T k)
    return k+1;
 }
 
-struct inputData
+void t_textList::addString(const std::string &text,float x, float y)
 {
-   float position[3];
-   float translation[3];
-   float textcord[2];
-   float rotation;
+   base.addString(text,x,y,list);
+}
+void t_textList::draw() const 
+{
+   base.draw(list);
+}
+void t_textList::clear()
+{
+   list.clear();
+}
 
-   float buffer[7];
-   inputData()
-   {
-      position = {};
-      translation = {};
-      textcord = {};
-      rotation = 0;
-   }
-};
+
+void t_text::draw(const t_renderList &list)
+{
+   int lastTexture;
+   glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
+   checkGLError();
+
+   glBindTexture(GL_TEXTURE_2D,texture);
+   checkGLError();
+
+   list.draw();
+
+
+   glBindTexture(GL_TEXTURE_2D,lastTexture);
+   checkGLError();
+}
 
 void t_text::setSize(int _width,int _height)
 {
@@ -54,12 +67,14 @@ void t_text::setSize(int _width,int _height)
 
 void t_text::drawString(const std::string &text, float x, float y)
 {
+   t_textList textList(*this);
 
+   textList.addString(text,x,y);
+   textList.draw();
+}
 
-   std::vector<inputData> vertexes(text.length() * 4);
-
-   //printf("%s\n",text.c_str());
-
+void t_text::addString(const std::string &text,float x, float y, t_renderList &list)
+{
    for (unsigned int i = 0; i < text.length(); i++)
    {
       char ch = text[i];
@@ -72,56 +87,27 @@ void t_text::drawString(const std::string &text, float x, float y)
       x+= 100 * blah.bearingX;
       y-= 100 * (blah.height - blah.bearingY);
 
-      vertexes[i*4+0].textcord[0] = (float) box.pos.x/side;
-      vertexes[i*4+0].textcord[1] = (float) box.pos.y/side;
-      vertexes[i*4+0].translation[0] = x;
-      vertexes[i*4+0].translation[1] = y;
-      vertexes[i*4+0].translation[2] = 0;
-
-      vertexes[i*4+1].textcord[0] = (float) box.pos.x/side;
-      vertexes[i*4+1].textcord[1] = (float)(box.pos.y + box.size.y)/side;
-      vertexes[i*4+1].translation[0] = x;
-      vertexes[i*4+1].translation[1] = y + 100 * blah.height;
-      vertexes[i*4+1].translation[2] = 0;
-
-      vertexes[i*4+2].textcord[0] = (float)(box.pos.x + box.size.x)/side;
-      vertexes[i*4+2].textcord[1] = (float) box.pos.y/side;
-      vertexes[i*4+2].translation[0] = x + 100 * blah.width;
-      vertexes[i*4+2].translation[1] = y;
-      vertexes[i*4+2].translation[2] = 0;
-
-      vertexes[i*4+3].textcord[0] = (float)(box.pos.x + box.size.x)/side;
-      vertexes[i*4+3].textcord[1] = (float)(box.pos.y + box.size.y)/side;
-      vertexes[i*4+3].translation[0] = x + 100 * blah.width;
-      vertexes[i*4+3].translation[1] = y + 100 * blah.height;
-      vertexes[i*4+3].translation[2] = 0;
+      list.addRect(x,y,0,(float) box.pos.x/side, (float) box.pos.y/side,
+                   x+ 100 * blah.width,y + 100 * blah.height,0, (float)(box.pos.x + box.size.x)/side, (float)(box.pos.y + box.size.y)/side);
 
       x+= 100 * (blah.advance - blah.bearingX);
       y+= 100 * (blah.height - blah.bearingY);
-
    }
-
-   glBufferSubData(GL_ARRAY_BUFFER,0, text.length() * 4 * sizeof(inputData),&vertexes[0]);
-   checkGLError();
-
-   glPointSize(20);
-   glDrawElements(GL_TRIANGLES,6 * text.length(),GL_UNSIGNED_SHORT,0);
 }
 
 
 t_text::t_text(int textSize , bool subpixel)
 {
+   int lastTexture;
+   glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
+
    glEnable(GL_TEXTURE_2D);
 
-   glGenTextures(1,textures);
+   glGenTextures(1,&texture);
    checkGLError();
 
-   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D,texture);
    checkGLError();
-
-   glBindTexture(GL_TEXTURE_2D,textures[0]);
-   checkGLError();
-
 
    FT_Library lib;
    int error = FT_Init_FreeType(&lib);
@@ -362,6 +348,8 @@ t_text::t_text(int textSize , bool subpixel)
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
    checkGLError();
 
+   glBindTexture(GL_TEXTURE_2D,lastTexture);
+   checkGLError();
 
    /*
 

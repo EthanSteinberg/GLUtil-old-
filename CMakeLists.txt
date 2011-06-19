@@ -32,6 +32,9 @@ include_directories(${GLEW_INCLUDE_PATH})
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_PATH})
 
+find_package(PNG REQUIRED)
+include_directories(${PNG_INCLUDE_DIR})
+
 add_subdirectory(src) 
 
 

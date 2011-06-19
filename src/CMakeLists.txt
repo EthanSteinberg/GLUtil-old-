@@ -6,7 +6,15 @@ set(SRCS
 )
  
 add_executable(Test ${HDRS} ${SRCS})
-target_link_libraries(Test text util matrix ${SFML_LIBRARY} ${GLEW_LIBRARY} ${FREETYPE_LIBRARIES} ${OPENGL_LIBRARY})
+target_link_libraries(Test pngUtil text util matrix render ${SFML_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_LIBRARY})
+
+include_directories(util)
+include_directories(png)
+include_directories(render)
+include_directories(text)
 
 add_subdirectory(util)
 add_subdirectory(text)
+add_subdirectory(png)
+add_subdirectory(render)
+

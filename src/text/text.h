@@ -4,12 +4,34 @@
 #include <string>
 #include <map>
 #include "myBox.h"
+#include "renderList.h"
+
+class t_text;
+
+class t_textList
+{
+public:
+   t_textList(t_text &_base): base(_base)
+   {}
+
+   void addString(const std::string &text,float x, float y);
+   void draw() const;
+   void clear();
+
+private:
+   t_text &base;
+   t_renderList list;
+};
 
 class t_text
 {
 public:
+
+
    t_text(int textSize = 14, bool subpixel = false);
-   void drawString(const std::string &text = std::string("A"),float x = 50, float y =50);
+   void drawString(const std::string &text,float x, float y );
+   void addString(const std::string &text,float x , float y ,t_renderList &list);
+   void draw(const t_renderList &list);
    void setSize(int width, int height);
 
 private:
@@ -40,7 +62,7 @@ private:
    std::map<char,t_myBox> charLocations;
    std::map<char,glyphMetric> charMetrics;
    int side;
-   unsigned int textures[1];
+   unsigned int texture;
 };
 
 
