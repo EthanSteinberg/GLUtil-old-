@@ -29,6 +29,9 @@ T nexthigher(T k)
    return k+1;
 }
 
+t_textList::t_textList(const t_text &_base) : base(_base)
+{}
+
 void t_textList::addString(const std::string &text,float x, float y)
 {
    base.addString(text,x,y,list);
@@ -43,7 +46,7 @@ void t_textList::clear()
 }
 
 
-void t_text::draw(const t_renderList &list)
+void t_text::draw(const t_renderList &list) const
 {
    int lastTexture;
    glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
@@ -73,13 +76,13 @@ void t_text::drawString(const std::string &text, float x, float y)
    textList.draw();
 }
 
-void t_text::addString(const std::string &text,float x, float y, t_renderList &list)
+void t_text::addString(const std::string &text,float x, float y, t_renderList &list) const
 {
    for (unsigned int i = 0; i < text.length(); i++)
    {
       char ch = text[i];
-      t_myBox box =  charLocations[ch];
-      glyphMetric blah = charMetrics[ch];
+      t_myBox box =  charLocations.find(ch)->second;
+      glyphMetric blah = charMetrics.find(ch)->second;
       //printf("The with was %lf and %lf\n",blah.width,blah.height);
 
       blah.raster(width,height);

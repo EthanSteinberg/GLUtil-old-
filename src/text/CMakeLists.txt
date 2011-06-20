@@ -1,6 +1,11 @@
 set(HDRS 
+   algoMaxRects.h
+algoMaxRects.h
+myBox.h
+myVector2.h
+pixelAlgo.h
+text.h
       
-   text.h
    )
  
 set(SRCS
@@ -10,6 +15,8 @@ set(SRCS
    myVector2.cpp
 )
  
-add_library(text ${HDRS} ${SRCS})
-target_link_libraries(text glUtil ${GLEW_LIBRARY} ${FREETYPE_LIBRARIES} ${OPENGL_LIBRARY})
+add_library(textUtil ${HDRS} ${SRCS})
+target_link_libraries(textUtil glUtil ${GLEW_LIBRARY} ${FREETYPE_LIBRARIES} ${OPENGL_LIBRARY})
 
+install(TARGETS textUtil ARCHIVE DESTINATION lib/GLUtil)
+install(FILES ${HDRS} DESTINATION include/GLUtil)

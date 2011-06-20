@@ -11,15 +11,14 @@ class t_text;
 class t_textList
 {
 public:
-   t_textList(t_text &_base): base(_base)
-   {}
+   t_textList(const t_text &_base);
 
    void addString(const std::string &text,float x, float y);
    void draw() const;
    void clear();
 
 private:
-   t_text &base;
+   const t_text &base;
    t_renderList list;
 };
 
@@ -30,8 +29,8 @@ public:
 
    t_text(int textSize = 14, bool subpixel = false);
    void drawString(const std::string &text,float x, float y );
-   void addString(const std::string &text,float x , float y ,t_renderList &list);
-   void draw(const t_renderList &list);
+   void addString(const std::string &text,float x , float y ,t_renderList &list) const;
+   void draw(const t_renderList &list) const;
    void setSize(int width, int height);
 
 private:

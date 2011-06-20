@@ -1,32 +1,17 @@
 set(HDRS 
       glUtil.h
-   )
- 
-set(SRCS
-      glUtil.cpp
-)
- 
-add_library(glUtil ${HDRS} ${SRCS})
-target_link_libraries(glUtil util ${GLEW_LIBRARY} ${OPENGL_LIBRARY})
-
-set(HDRS 
       util.h
-   )
- 
-set(SRCS
-      util.cpp
-)
-
-add_library(util ${HDRS} ${SRCS})
-target_link_libraries(util rt)
-
-set(HDRS 
       matrix.h
    )
  
 set(SRCS
+      glUtil.cpp
+      util.cpp
       matrix.cpp
 )
+ 
+add_library(glUtil ${HDRS} ${SRCS})
+target_link_libraries(glUtil ${GLEW_LIBRARY} ${OPENGL_LIBRARY} rt)
 
-add_library(matrix ${HDRS} ${SRCS})
-target_link_libraries(matrix)
+install(TARGETS glUtil ARCHIVE DESTINATION lib/GLUtil)
+install(FILES ${HDRS} DESTINATION include/GLUtil)

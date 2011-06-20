@@ -6,6 +6,7 @@
 #include "matrix.h"
 #include "pngUtil.h"
 #include "pngList.h"
+#include "pngJson.h"
 #include "render.h"
 #include "renderList.h"
 
@@ -27,7 +28,9 @@ int main(int argv, char **argc)
    blah.loadImage("../res/blah.png");
    blah.perspectiveOrtho(0,100,100, 0, -5, 5);
 
-   t_pngList imageList("../res/pixelPacker.png","../res/pixelPacker.json");
+   t_pngJson image("../res/pixelPacker.png","../res/pixelPacker.json");
+   image.setSize(800,600);
+   t_pngList imageList(image);
    imageList.addImage("5",10,10,1);
 
    t_text text(20);
@@ -54,6 +57,13 @@ int main(int argv, char **argc)
          {
             glViewport(0,0,event.Size.Width, event.Size.Height);
             text.setSize(event.Size.Width,event.Size.Height);
+            image.setSize(event.Size.Width,event.Size.Height);
+
+            lazyDogText.clear();
+            lazyDogText.addString("The quick brown fox jumps over the lazy dog",0,50);
+
+            imageList.clear();
+            imageList.addImage("5",10,10,1);
          }
          break;
 
