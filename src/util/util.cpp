@@ -49,7 +49,7 @@ void printBacktrace()
    printf("backtrace() returned %d addresses\n",nptrs);
 
    raise(SIGSEGV);
-   //backtrace_symbols_fd(buffer,nptrs, STDOUT_FILENO);
+   //backtrace_symbols_fd(buffer,nptrs, STDOUFILENO);
 }
 
 

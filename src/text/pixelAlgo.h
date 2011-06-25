@@ -19,10 +19,10 @@ in the file COPYING.
 #include <vector>
 #include <map>
 
-class t_pixelAlgo
+class PixelAlgo
 {
 public:
-   virtual std::multimap<t_myVector2, t_myVector2> pack(const std::vector< t_myVector2> &rects, const t_myVector2 &size,bool &fine) = 0;
+   virtual std::multimap<MyVector2, MyVector2> pack(const std::vector< MyVector2> &rects, const MyVector2 &size,bool &fine) = 0;
 
 };
 

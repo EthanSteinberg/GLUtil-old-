@@ -4,19 +4,19 @@
 #include <string>
 
 
-class t_renderList;
+class RenderList;
 
 namespace Json
 {
    class Value;
 }
 
-class t_pngJson
+class PngJson
 {
 public:
-   t_pngJson(const std::string &filename, const std::string &jsonname);
-   void addImage(const std::string &text,float x , float y ,float scale,t_renderList &list) const;
-   void draw(const t_renderList &list) const;
+   PngJson(const std::string &filename, const std::string &jsonname);
+   void addImage(const std::string &text,float x , float y ,float scale,RenderList &list) const;
+   void draw(const RenderList &list) const;
    void setSize(int width, int height);
 
 private:

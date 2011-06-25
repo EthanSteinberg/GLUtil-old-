@@ -16,10 +16,10 @@ in the file COPYING.
 
 #include "pixelAlgo.h"
 
-class t_algoMaxRects : public t_pixelAlgo
+class AlgoMaxRects : public PixelAlgo
 {
    public:
-   virtual std::multimap<t_myVector2,t_myVector2> pack(const std::vector< t_myVector2> &rects,const t_myVector2 &size,bool &fine);
+   virtual std::multimap<MyVector2,MyVector2> pack(const std::vector< MyVector2> &rects,const MyVector2 &size,bool &fine);
 };
 
 #endif

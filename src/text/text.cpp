@@ -29,24 +29,24 @@ T nexthigher(T k)
    return k+1;
 }
 
-t_textList::t_textList(const t_text &_base) : base(_base)
+TextList::TextList(const Text &_base) : base(_base)
 {}
 
-void t_textList::addString(const std::string &text,float x, float y)
+void TextList::addString(const std::string &text,float x, float y)
 {
    base.addString(text,x,y,list);
 }
-void t_textList::draw() const 
+void TextList::draw() const 
 {
    base.draw(list);
 }
-void t_textList::clear()
+void TextList::clear()
 {
    list.clear();
 }
 
 
-void t_text::draw(const t_renderList &list) const
+void Text::draw(const RenderList &list) const
 {
    int lastTexture;
    glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
@@ -62,26 +62,26 @@ void t_text::draw(const t_renderList &list) const
    checkGLError();
 }
 
-void t_text::setSize(int _width,int _height)
+void Text::setSize(int _width,int _height)
 {
    width = _width;
    height = _height;
 }
 
-void t_text::drawString(const std::string &text, float x, float y)
+void Text::drawString(const std::string &text, float x, float y)
 {
-   t_textList textList(*this);
+   TextList textList(*this);
 
    textList.addString(text,x,y);
    textList.draw();
 }
 
-void t_text::addString(const std::string &text,float x, float y, t_renderList &list) const
+void Text::addString(const std::string &text,float x, float y, RenderList &list) const
 {
    for (unsigned int i = 0; i < text.length(); i++)
    {
       char ch = text[i];
-      t_myBox box =  charLocations.find(ch)->second;
+      MyBox box =  charLocations.find(ch)->second;
       glyphMetric blah = charMetrics.find(ch)->second;
       //printf("The with was %lf and %lf\n",blah.width,blah.height);
 
@@ -99,7 +99,7 @@ void t_text::addString(const std::string &text,float x, float y, t_renderList &l
 }
 
 
-t_text::t_text(int textSize , bool subpixel)
+Text::Text(int textSize , bool subpixel)
 {
    int lastTexture;
    glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
@@ -151,7 +151,7 @@ t_text::t_text(int textSize , bool subpixel)
 
    FT_Glyph characters[end - start + 1];
 
-   std::vector<t_myVector2> sizes(end - start + 1);
+   std::vector<MyVector2> sizes(end - start + 1);
 
    int area = 0;
 
@@ -201,13 +201,13 @@ t_text::t_text(int textSize , bool subpixel)
 
       if (subpixel)
       {
-         sizes[character - start] = t_myVector2(face->glyph->bitmap.width/3+1, face->glyph->bitmap.rows+1);
+         sizes[character - start] = MyVector2(face->glyph->bitmap.width/3+1, face->glyph->bitmap.rows+1);
          area += face->glyph->bitmap.width/3 * face->glyph->bitmap.rows;
       }
 
       else
       {
-         sizes[character - start] = t_myVector2(face->glyph->bitmap.width+1, face->glyph->bitmap.rows+1);
+         sizes[character - start] = MyVector2(face->glyph->bitmap.width+1, face->glyph->bitmap.rows+1);
          area += face->glyph->bitmap.width * face->glyph->bitmap.rows;
       }
 
@@ -222,19 +222,19 @@ t_text::t_text(int textSize , bool subpixel)
    */
 
    side = nexthigher((int) sqrt(area));
-   t_myVector2 size(side,side);
+   MyVector2 size(side,side);
 
    bool done = 0;
 
 
-   t_algoMaxRects algo;
+   AlgoMaxRects algo;
    auto theMap = algo.pack(sizes,size,done);
    printf("\nThe side is %d and %d\n",side,done);
 
    if (!done)
    {
       side *= 2;
-      size = t_myVector2(side,side);
+      size = MyVector2(side,side);
       theMap = algo.pack(sizes,size,done);
       printf("\nThe side is %d and %d\n",side,done);
    }
@@ -261,7 +261,7 @@ t_text::t_text(int textSize , bool subpixel)
 
    for (int ch = start ; ch <= end; ch++)
    {
-      t_myVector2 theSize = sizes[ch - start];
+      MyVector2 theSize = sizes[ch - start];
       FT_BitmapGlyph image = (FT_BitmapGlyph) characters[ch - start];
       auto iter = theMap.find(theSize);
 
@@ -271,11 +271,11 @@ t_text::t_text(int textSize , bool subpixel)
          continue;
       }
 
-      t_myVector2 theLocation = iter->second;
+      MyVector2 theLocation = iter->second;
       theMap.erase(iter);
 
 
-      charLocations[ch] = t_myBox(theLocation.x,side - (theLocation.y + theSize.y -1),theSize.x - 1,(theSize.y -1));
+      charLocations[ch] = MyBox(theLocation.x,side - (theLocation.y + theSize.y -1),theSize.x - 1,(theSize.y -1));
 
       if (ch == 'A')
       {

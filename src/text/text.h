@@ -1,36 +1,36 @@
-#ifndef TEXT_H_INCLUDED
-#define TEXT_H_INCLUDED
+#ifndef TEXH_INCLUDED
+#define TEXH_INCLUDED
 
 #include <string>
 #include <map>
 #include "myBox.h"
 #include "renderList.h"
 
-class t_text;
+class Text;
 
-class t_textList
+class TextList
 {
 public:
-   t_textList(const t_text &_base);
+   TextList(const Text &_base);
 
    void addString(const std::string &text,float x, float y);
    void draw() const;
    void clear();
 
 private:
-   const t_text &base;
-   t_renderList list;
+   const Text &base;
+   RenderList list;
 };
 
-class t_text
+class Text
 {
 public:
 
 
-   t_text(int textSize = 14, bool subpixel = false);
+   Text(int textSize = 14, bool subpixel = false);
    void drawString(const std::string &text,float x, float y );
-   void addString(const std::string &text,float x , float y ,t_renderList &list) const;
-   void draw(const t_renderList &list) const;
+   void addString(const std::string &text,float x , float y ,RenderList &list) const;
+   void draw(const RenderList &list) const;
    void setSize(int width, int height);
 
 private:
@@ -58,7 +58,7 @@ private:
       }
    };
 
-   std::map<char,t_myBox> charLocations;
+   std::map<char,MyBox> charLocations;
    std::map<char,glyphMetric> charMetrics;
    int side;
    unsigned int texture;

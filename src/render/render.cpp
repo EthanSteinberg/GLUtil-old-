@@ -13,7 +13,7 @@ void *offset(int floatNum)
    return (void *)(sizeof(float) * floatNum);
 }
 
-void t_render::createAndBindBuffers(int numOfRects)
+void Render::createAndBindBuffers(int numOfRects)
 {
 
    unsigned int buffers[2];
@@ -84,7 +84,7 @@ void t_render::createAndBindBuffers(int numOfRects)
    checkGLError();
 }
 
-t_render::t_render(const std::string &frag, const std::string &vert, int numOfRects)
+Render::Render(const std::string &frag, const std::string &vert, int numOfRects)
 {
 
    GLuint vertShader = createShader(vert, GL_VERTEX_SHADER);
@@ -100,7 +100,7 @@ t_render::t_render(const std::string &frag, const std::string &vert, int numOfRe
    bindTexture();
 }
 
-void t_render::bindTexture()
+void Render::bindTexture()
 {
    glEnable(GL_TEXTURE_2D);
    checkGLError();
@@ -115,7 +115,7 @@ void t_render::bindTexture()
 }
 
 
-void t_render::loadImage(const std::string &filename)
+void Render::loadImage(const std::string &filename)
 {
    if (textMap.count(filename) == 0)
    {
@@ -136,7 +136,7 @@ void t_render::loadImage(const std::string &filename)
       checkGLError();
    }
 }
-void t_render::perspectiveOrtho(double left,double right,double bottom, double top, double near, double far)
+void Render::perspectiveOrtho(double left,double right,double bottom, double top, double near, double far)
 {
    int perspectivePosition = glGetUniformLocation(program,"in_ProjectionMatrix");
    checkGLError();

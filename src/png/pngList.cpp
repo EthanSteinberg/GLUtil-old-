@@ -8,21 +8,21 @@
 
 #include "glUtil.h"
 
-t_pngList::t_pngList(const t_pngJson &_base) : base(_base)
+PngList::PngList(const PngJson &_base) : base(_base)
 {
 }
 
-void t_pngList::addImage(const std::string &name,float x, float y,float scale)
+void PngList::addImage(const std::string &name,float x, float y,float scale)
 {
    base.addImage(name,x,y,scale,list);
 }
 
-void t_pngList::draw() const
+void PngList::draw() const
 {
    base.draw(list);
 }
 
-void t_pngList::clear()
+void PngList::clear()
 {
    list.clear();
 }

@@ -24,23 +24,23 @@ int main(int argv, char **argc)
    }
 
    printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-   t_render blah("../res/frag","../res/vert");
+   Render blah("../res/frag","../res/vert");
    blah.loadImage("../res/blah.png");
    blah.perspectiveOrtho(0,100,100, 0, -5, 5);
 
-   t_pngJson image("../res/pixelPacker.png","../res/pixelPacker.json");
+   PngJson image("../res/pixelPacker.png","../res/pixelPacker.json");
    image.setSize(800,600);
-   t_pngList imageList(image);
+   PngList imageList(image);
    imageList.addImage("5",10,10,1);
 
-   t_text text(20);
+   Text text(20);
    text.setSize(800,600);
-   t_textList lazyDogText(text);
+   TextList lazyDogText(text);
    lazyDogText.addString("The quick brown fox jumps over the lazy dog",0,50);
 
    glClearColor(0,.5,.5,0);
 
-   t_renderList list;
+   RenderList list;
    list.addRect(  30,30,0,0,0,
                   70,70,0,1,1);
 

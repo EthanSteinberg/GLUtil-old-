@@ -9,7 +9,7 @@
 #include "glUtil.h"
 #include "renderList.h"
 
-t_pngJson::t_pngJson(const std::string &picname, const std::string &jsonName)
+PngJson::PngJson(const std::string &picname, const std::string &jsonName)
 {
    root = new Json::Value;
    std::ifstream jsonFile(jsonName);
@@ -38,7 +38,7 @@ t_pngJson::t_pngJson(const std::string &picname, const std::string &jsonName)
    checkGLError();
 }
 
-void t_pngJson::addImage(const std::string &name,float x, float y,float scale, t_renderList &list) const
+void PngJson::addImage(const std::string &name,float x, float y,float scale, RenderList &list) const
 {
    Json::Value imageValue = (*root)[name];
    if (imageValue.isNull())
@@ -69,7 +69,7 @@ void t_pngJson::addImage(const std::string &name,float x, float y,float scale, t
                 x + 100 * translateX,y + 100 * translateY,0,(imageX + imageSizeX)/sidex,imageY/sidey);
 }
 
-void t_pngJson::draw(const t_renderList &list) const
+void PngJson::draw(const RenderList &list) const
 {
    int lastTexture;
    glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
@@ -84,7 +84,7 @@ void t_pngJson::draw(const t_renderList &list) const
    checkGLError();
 }
 
-void t_pngJson::setSize(int _width, int _height)
+void PngJson::setSize(int _width, int _height)
 {
    width = _width;
    height = _height;

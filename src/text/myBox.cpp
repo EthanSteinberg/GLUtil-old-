@@ -16,21 +16,21 @@ in the file COPYING.
 
 using namespace std::rel_ops;
 
-t_myBox::t_myBox()
+MyBox::MyBox()
 {}
 
-t_myBox::t_myBox(int x,int y, int width, int height) : pos(x,y), size(width,height)
+MyBox::MyBox(int x,int y, int width, int height) : pos(x,y), size(width,height)
 {}
 
-t_myBox::t_myBox(t_myVector2 Pos, t_myVector2 Size) : pos(Pos), size(Size)
+MyBox::MyBox(MyVector2 Pos, MyVector2 Size) : pos(Pos), size(Size)
 {}
 
-bool t_myBox::operator==(const t_myBox &box) const
+bool MyBox::operator==(const MyBox &box) const
 {
    return (box.pos == pos) && (box.size == size);
 }
 
-bool t_myBox::operator<(const t_myBox &box) const
+bool MyBox::operator<(const MyBox &box) const
 {
    if (box.pos < pos)
    {

@@ -4,10 +4,10 @@
 #include "glUtil.h"
 #include <cstring>
 
-t_renderList::t_renderList()
+RenderList::RenderList()
 {
 }
-   void t_renderList::addPoint(float x, float y, float z, float textX,float textY)
+   void RenderList::addPoint(float x, float y, float z, float textX,float textY)
 {
    inputData blah;
    memset(&blah,0,sizeof(blah));
@@ -21,7 +21,7 @@ t_renderList::t_renderList()
 
 }
 
-void t_renderList::addRect(float x1,float y1, float z1, float textX1, float textY1,
+void RenderList::addRect(float x1,float y1, float z1, float textX1, float textY1,
                            float x2,float y2, float z2, float textX2, float textY2)
 {
    addPoint(x1,y1,z1,textX1,textY1);
@@ -30,7 +30,7 @@ void t_renderList::addRect(float x1,float y1, float z1, float textX1, float text
    addPoint(x2,y2,z1,textX2,textY2);
 }
 
-   void t_renderList::draw() const 
+   void RenderList::draw() const 
 {
    glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size() * sizeof(inputData),&vertices[0]);
    checkGLError();
@@ -39,7 +39,7 @@ void t_renderList::addRect(float x1,float y1, float z1, float textX1, float text
    checkGLError();
 }
 
-void t_renderList::clear()
+void RenderList::clear()
 {
    vertices.clear();
 }

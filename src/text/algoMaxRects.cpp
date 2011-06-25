@@ -24,21 +24,21 @@ in the file COPYING.
 
 #include <assert.h>
 
-std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< t_myVector2> &temp, const t_myVector2 &size, bool &fine)
+std::multimap<MyVector2, MyVector2> AlgoMaxRects::pack(const std::vector< MyVector2> &temp, const MyVector2 &size, bool &fine)
 {
-   std::list<t_myBox> freeBoxes;
-   freeBoxes.push_back(t_myBox(0,0,size.x,size.y));
+   std::list<MyBox> freeBoxes;
+   freeBoxes.push_back(MyBox(0,0,size.x,size.y));
 
-   std::list<t_myVector2> rects(temp.begin(), temp.end());
+   std::list<MyVector2> rects(temp.begin(), temp.end());
 
-   std::multimap<t_myVector2, t_myVector2> boxes;
+   std::multimap<MyVector2, MyVector2> boxes;
 
    while (!rects.empty())
    {
       int min = std::max(size.x,size.y);
 
-      std::list<t_myVector2>::iterator minIterRects = rects.end();
-      std::list<t_myBox>::iterator minIterFreeBoxes = freeBoxes.end();
+      std::list<MyVector2>::iterator minIterRects = rects.end();
+      std::list<MyBox>::iterator minIterFreeBoxes = freeBoxes.end();
 
       for (auto iterRects = rects.begin(); iterRects != rects.end(); iterRects++)
       {
@@ -66,33 +66,33 @@ std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< 
 
       if (minIterRects == rects.end() || minIterFreeBoxes == freeBoxes.end())
       {
-         return std::multimap<t_myVector2, t_myVector2>();
+         return std::multimap<MyVector2, MyVector2>();
       }
       
 
       //std::cout<<"I am placing the box "<<*minIterRects<<" into the position "<<minIterFreeBoxes->pos<<std::endl;
       //std::cout<<minIterFreeBoxes->pos<<std::endl;
 
-      t_myBox insertedBox = t_myBox(minIterFreeBoxes->pos,*minIterRects);
+      MyBox insertedBox = MyBox(minIterFreeBoxes->pos,*minIterRects);
       boxes.insert(std::make_pair(*minIterRects,minIterFreeBoxes->pos));
 
-      freeBoxes.push_front(t_myBox(
-                             t_myVector2(
+      freeBoxes.push_front(MyBox(
+                             MyVector2(
                                 minIterFreeBoxes->pos.x + minIterRects->x,
                                 minIterFreeBoxes->pos.y + 0),
 
-                             t_myVector2(
+                             MyVector2(
                                 minIterFreeBoxes->size.x - minIterRects->x,
                                 minIterFreeBoxes->size.y)
                           ));
 
 
-      freeBoxes.push_front(t_myBox(
-                             t_myVector2(
+      freeBoxes.push_front(MyBox(
+                             MyVector2(
                                 minIterFreeBoxes->pos.x + 0,
                                 minIterFreeBoxes->pos.y + minIterRects->y),
 
-                             t_myVector2(
+                             MyVector2(
                                 minIterFreeBoxes->size.x,
                                 minIterFreeBoxes->size.y - minIterRects->y)
                           ));
@@ -101,19 +101,19 @@ std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< 
       freeBoxes.erase(minIterFreeBoxes);
 
 
-      t_myVector2 a1 = insertedBox.pos;
-      t_myVector2 a2 = t_myVector2(insertedBox.pos.x + insertedBox.size.x,insertedBox.pos.y);
-      t_myVector2 a3 = t_myVector2(insertedBox.pos.x + insertedBox.size.x,insertedBox.pos.y + insertedBox.size.y);
-      t_myVector2 a4 = t_myVector2(insertedBox.pos.x                     ,insertedBox.pos.y + insertedBox.size.y);
+      MyVector2 a1 = insertedBox.pos;
+      MyVector2 a2 = MyVector2(insertedBox.pos.x + insertedBox.size.x,insertedBox.pos.y);
+      MyVector2 a3 = MyVector2(insertedBox.pos.x + insertedBox.size.x,insertedBox.pos.y + insertedBox.size.y);
+      MyVector2 a4 = MyVector2(insertedBox.pos.x                     ,insertedBox.pos.y + insertedBox.size.y);
 
       for (auto iterFreeBoxes = freeBoxes.begin(); iterFreeBoxes != freeBoxes.end();)
       {
          assert(iterFreeBoxes != freeBoxes.end());
          //assert(!(iterFreeBoxes->pos == insertedBox.pos));
-         t_myVector2 b1 = iterFreeBoxes->pos;
-         t_myVector2 b2 = t_myVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y);
-         t_myVector2 b3 = t_myVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
-         t_myVector2 b4 = t_myVector2(iterFreeBoxes->pos.x                        ,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
+         MyVector2 b1 = iterFreeBoxes->pos;
+         MyVector2 b2 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y);
+         MyVector2 b3 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
+         MyVector2 b4 = MyVector2(iterFreeBoxes->pos.x                        ,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
 
          if ((a1.x >= b3.x) || (a1.y >= b3.y) ||
                (a3.x <= b1.x) || (a3.y <= b1.y))
@@ -125,12 +125,12 @@ std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< 
 
          if ((a1.x > b1.x) /*  && (a1.x < b3.x) */) // If there is a chance that line a1,a2 is in the shape b
          {
-            freeBoxes.push_front(t_myBox(
-                                    t_myVector2(
+            freeBoxes.push_front(MyBox(
+                                    MyVector2(
                                        iterFreeBoxes->pos.x,
                                        iterFreeBoxes->pos.y),
 
-                                    t_myVector2(
+                                    MyVector2(
                                        a1.x - b1.x,
                                        iterFreeBoxes->size.y)
                                  ));
@@ -138,12 +138,12 @@ std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< 
 
          if ((a3.x < b3.x) /*  && (a1.x < b3.x) */) // If there is a chance that line a1,a2 is in the shape b
          {
-            freeBoxes.push_front(t_myBox(
-                                    t_myVector2(
+            freeBoxes.push_front(MyBox(
+                                    MyVector2(
                                        a3.x,
                                        iterFreeBoxes->pos.y),
 
-                                    t_myVector2(
+                                    MyVector2(
                                        b3.x - a3.x,
                                        iterFreeBoxes->size.y)
                                  ));
@@ -151,12 +151,12 @@ std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< 
 
          if ((a1.y > b1.y) /*  && (a1.x < b3.x) */) // If there is a chance that line a1,a2 is in the shape b
          {
-            freeBoxes.push_front(t_myBox(
-                                    t_myVector2(
+            freeBoxes.push_front(MyBox(
+                                    MyVector2(
                                        iterFreeBoxes->pos.x,
                                        iterFreeBoxes->pos.y),
 
-                                    t_myVector2(
+                                    MyVector2(
                                        iterFreeBoxes->size.x,
                                        a1.y - b1.y)
                                  ));
@@ -164,12 +164,12 @@ std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< 
 
          if ((a3.y < b3.y) /*  && (a1.x < b3.x) */) // If there is a chance that line a1,a2 is in the shape b
          {
-            freeBoxes.push_front(t_myBox(
-                                    t_myVector2(
+            freeBoxes.push_front(MyBox(
+                                    MyVector2(
                                        iterFreeBoxes->pos.x,
                                        a3.y),
 
-                                    t_myVector2(
+                                    MyVector2(
                                        iterFreeBoxes->size.x,
                                        b3.y - a3.y)
                                  ));
@@ -194,15 +194,15 @@ std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< 
             assert(iterFreeBoxes != iterFreeBoxes2);
             //assert(!((*iterFreeBoxes).pos == (*iterFreeBoxes2).pos));
 
-            t_myVector2 b1 = iterFreeBoxes->pos;
-            t_myVector2 b2 = t_myVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y);
-            t_myVector2 b3 = t_myVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
-            t_myVector2 b4 = t_myVector2(iterFreeBoxes->pos.x                        ,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
+            MyVector2 b1 = iterFreeBoxes->pos;
+            MyVector2 b2 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y);
+            MyVector2 b3 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
+            MyVector2 b4 = MyVector2(iterFreeBoxes->pos.x                        ,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
 
-            t_myVector2 c1 = iterFreeBoxes2->pos;
-            t_myVector2 c2 = t_myVector2(iterFreeBoxes2->pos.x + iterFreeBoxes2->size.x,iterFreeBoxes2->pos.y);
-            t_myVector2 c3 = t_myVector2(iterFreeBoxes2->pos.x + iterFreeBoxes2->size.x,iterFreeBoxes2->pos.y + iterFreeBoxes2->size.y);
-            t_myVector2 c4 = t_myVector2(iterFreeBoxes2->pos.x                         ,iterFreeBoxes2->pos.y + iterFreeBoxes2->size.y);
+            MyVector2 c1 = iterFreeBoxes2->pos;
+            MyVector2 c2 = MyVector2(iterFreeBoxes2->pos.x + iterFreeBoxes2->size.x,iterFreeBoxes2->pos.y);
+            MyVector2 c3 = MyVector2(iterFreeBoxes2->pos.x + iterFreeBoxes2->size.x,iterFreeBoxes2->pos.y + iterFreeBoxes2->size.y);
+            MyVector2 c4 = MyVector2(iterFreeBoxes2->pos.x                         ,iterFreeBoxes2->pos.y + iterFreeBoxes2->size.y);
 
             if (c1.x >= b1.x && c1.y >= b1.y &&
                   c3.x <= b3.x && c3.y <= b3.y)
@@ -220,7 +220,7 @@ std::multimap<t_myVector2, t_myVector2> t_algoMaxRects::pack(const std::vector< 
 
 
       /*
-      BOOST_FOREACH(t_myBox &lol, freeBoxes)
+      BOOSFOREACH(MyBox &lol, freeBoxes)
       {
          //std::cout<<"A free box with "<<lol.pos<<std::endl;
       }

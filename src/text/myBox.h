@@ -16,18 +16,18 @@ in the file COPYING.
 
 #include "myVector2.h"
 
-class t_myBox
+class MyBox
 {
 public:
-   t_myBox();
-   t_myBox(int x, int y, int width, int height);
-   t_myBox(t_myVector2 pos,t_myVector2 size);
+   MyBox();
+   MyBox(int x, int y, int width, int height);
+   MyBox(MyVector2 pos,MyVector2 size);
 
-   bool operator==(const t_myBox &box) const;
-   bool operator<(const t_myBox &box) const;
+   bool operator==(const MyBox &box) const;
+   bool operator<(const MyBox &box) const;
 
-   t_myVector2 pos;
-   t_myVector2 size;
+   MyVector2 pos;
+   MyVector2 size;
 };
 
 

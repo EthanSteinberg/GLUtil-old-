@@ -5,10 +5,10 @@
 #include <map>
 
 
-class t_render
+class Render
 {
 public:
-   t_render(const std::string &frag, const std::string &vert, int numOfRects = 100);
+   Render(const std::string &frag, const std::string &vert, int numOfRects = 100);
    void loadImage(const std::string &filename);
    void perspectiveOrtho(double left,double right,double bottom, double top, double near, double far);
 
