@@ -4,6 +4,12 @@
 #include "glUtil.h"
 #include <vector>
 
+#include <iostream>
+#include <boost/format.hpp>
+
+using std::cout;
+using boost::format;
+
 void loadTexture(const std::string &filename)
 {
    FILE *theFile = fopen(filename.c_str(),"rb");
@@ -25,7 +31,7 @@ void loadTexture(const std::string &filename)
 
    if (png_sig_cmp((png_byte *) header,0,8))
    {
-      printf("The file is not a png\n");
+      cout<<"The file is not a png\n";
       exit(1);
    }
 
@@ -36,7 +42,7 @@ void loadTexture(const std::string &filename)
 
    if (!png_ptr)
    {
-      printf("Failed initialization of png_ptr\n");
+      cout<<"Failed initialization of png_ptr\n";
       exit(1);
    }
 
@@ -46,7 +52,7 @@ void loadTexture(const std::string &filename)
    {
       png_destroy_read_struct(&png_ptr,
                               (png_infopp)NULL, (png_infopp)NULL);
-      printf("Info ptr creation failed\n");
+      cout<<"Info ptr creation failed\n";
       exit(1);
    }
 
@@ -56,7 +62,7 @@ void loadTexture(const std::string &filename)
    {
       png_destroy_read_struct(&png_ptr, &info_ptr,
                               (png_infopp)NULL);
-      printf("Info ptr creation failed\n");
+      cout<<"Info ptr creation failed\n";
       exit(1);
    }
 
@@ -77,7 +83,7 @@ void loadTexture(const std::string &filename)
            row_pointers[i] = &image_data[0] + i * rowbytes;
 
 
-   printf("I have read the image with width %d, height %d, depth %d, rowbytes %d\n",width,height,depth,rowbytes);
+   cout<<format("I have read the image with width %d, height %d, depth %d, rowbytes %d\n") % width % height % depth % rowbytes;
 
    png_read_image(png_ptr,&row_pointers[0]);
 

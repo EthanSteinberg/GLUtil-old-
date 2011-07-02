@@ -2,8 +2,7 @@
 #include "util.h"
 #include <signal.h>
 
-#include <cstdio>
-#include <execinfo.h>
+//#include <execinfo.h>
 
 std::string loadFile(const std::string &filename)
 {
@@ -42,14 +41,14 @@ std::string loadFile(const std::string &filename)
 
 void printBacktrace()
 {
-   const int size = 100;
+/*   const int size = 100;
    void *buffer[size];
 
    int nptrs = backtrace(buffer, size);
-   printf("backtrace() returned %d addresses\n",nptrs);
-
+   cout<<"backtrace() returned %d addresses\n",nptrs);
+   backtrace_symbols_fd(buffer,nptrs, STDOUFILENO);
+*/
    raise(SIGSEGV);
-   //backtrace_symbols_fd(buffer,nptrs, STDOUFILENO);
 }
 
 

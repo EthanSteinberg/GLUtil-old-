@@ -3,6 +3,11 @@
 #include <json/json.h>
 
 #include <iostream>
+#include <boost/format.hpp>
+
+using std::cout;
+using boost::format;
+
 #include <fstream>
 #include "pngUtil.h"
 
@@ -18,7 +23,7 @@ PngJson::PngJson(const std::string &picname, const std::string &jsonName)
 
    if (!success)
    {
-      std::cout <<"Failed to parse\n"<<reader.getFormatedErrorMessages();
+      cout <<format("Failed to parse %s\n")  % reader.getFormatedErrorMessages();
       exit(1);
    }
 
@@ -43,7 +48,7 @@ void PngJson::addImage(const std::string &name,float x, float y,float scale, Ren
    Json::Value imageValue = (*root)[name];
    if (imageValue.isNull())
    {
-      printf("That image %s is not in the picture\n",name.c_str());
+      cout<<format("That image %s is not in the picture\n") % name;
       exit(1);
    }
 
@@ -55,7 +60,7 @@ void PngJson::addImage(const std::string &name,float x, float y,float scale, Ren
    int imageY = imageValue["y"].asInt();
    int imageSizeX = imageValue["sizex"].asInt();
    int imageSizeY = imageValue["sizey"].asInt();
-   //printf("The size was %d and %d",imageSizeX,imageSizeY);
+   //cout<<"The size was %d and %d",imageSizeX,imageSizeY);
 
    //list.addRect(x, y, 0,0,0,
      //           x + imageSizeX/scale,y + imageSizeY/scale,0,1,1);
@@ -63,7 +68,7 @@ void PngJson::addImage(const std::string &name,float x, float y,float scale, Ren
 
    const float translateX = (imageSizeX/scale)/width;
    const float translateY = (imageSizeY/scale)/height;
-   //printf("The translate is %f\n",translateX);
+   //cout<<"The translate is %f\n",translateX);
 
    list.addRect(x, y, 0,imageX/sidex,(imageY + imageSizeY)/sidey,
                 x + 100 * translateX,y + 100 * translateY,0,(imageX + imageSizeX)/sidex,imageY/sidey);

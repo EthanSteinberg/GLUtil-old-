@@ -1,5 +1,6 @@
 #include <GL/glew.h>
-#include <cstdio>
+#include <iostream>
+#include <boost/format.hpp>
 #include <SFML/Window.hpp>
 #include "text/text.h"
 #include "glUtil.h"
@@ -10,6 +11,9 @@
 #include "render.h"
 #include "renderList.h"
 
+using std::cout;
+using boost::format;
+
 int main(int argv, char **argc)
 {
    sf::Window App(sf::VideoMode(800,600,32),"SFML OpenGL");
@@ -19,11 +23,11 @@ int main(int argv, char **argc)
 
    if (GLEW_OK != err)
    {
-      printf("Glew error: %s\n",glewGetErrorString(err));
+      cout<<format("Glew error: %s\n") % glewGetErrorString(err);
       exit(1);
    }
 
-   printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+   cout<<format("Status: Using GLEW %s\n") % glewGetString(GLEW_VERSION);
    Render blah("../res/frag","../res/vert");
    blah.loadImage("../res/blah.png");
    blah.perspectiveOrtho(0,100,100, 0, -5, 5);

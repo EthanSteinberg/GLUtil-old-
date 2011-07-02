@@ -2,7 +2,11 @@
 #include "glUtil.h"
 
 #include <GL/glew.h>
-#include <cstdio>
+#include <iostream>
+#include <boost/format.hpp>
+
+using std::cout;
+using boost::format;
 
 #if 0
 #include <boost/scoped_ptr.hpp>
@@ -18,39 +22,39 @@ void checkGLError()
          return;
 
       case GL_INVALID_ENUM:
-         printf("GL Invalid enum error\n\n");
+         cout<<"GL Invalid enum error\n\n";
          printBacktrace();
          exit(1);
          break;
 
       case GL_INVALID_VALUE:
-         printf("GL Invalid value error\n\n");
+         cout<<"GL Invalid value error\n\n";
          printBacktrace();
          exit(1);
          break;
       case GL_INVALID_OPERATION:
-         printf("GL Invalid operation error\n\n");
+         cout<<"GL Invalid operation error\n\n";
          printBacktrace();
          exit(1);
          break;
       case GL_STACK_OVERFLOW:
-         printf("GL Stack overflow error\n\n");
+         cout<<"GL Stack overflow error\n\n";
          printBacktrace();
          exit(1);
          break;
       case GL_STACK_UNDERFLOW:
-         printf("GL Stack underflow error\n\n");
+         cout<<"GL Stack underflow error\n\n";
          printBacktrace();
          exit(1);
          break;
       case GL_OUT_OF_MEMORY:
-         printf("GL Out of memory error\n\n");
+         cout<<"GL Out of memory error\n\n";
          printBacktrace();
          exit(1);
          break;
 
       case GL_TABLE_TOO_LARGE:
-         printf("GL Table too large error\n\n");
+         cout<<"GL Table too large error\n\n";
          printBacktrace();
          exit(1);
          break;
@@ -64,7 +68,7 @@ unsigned int createProgram(unsigned int vertShader, unsigned int fragShader)
 
    if (!program)
    {
-      printf("Create program error ");
+      cout<<"Create program error ";
       checkGLError();
    }
 
@@ -89,7 +93,7 @@ void activateProgram(unsigned int program)
 
    if (param == GL_FALSE)
    {
-      printf("Problem linking the program\n");
+      cout<<"Problem linking the program\n";
 
       glGetProgramiv(program,GL_INFO_LOG_LENGTH,&param);
       checkGLError();
@@ -98,7 +102,7 @@ void activateProgram(unsigned int program)
 
       glGetProgramInfoLog(program,param,NULL,logBuffer);
       checkGLError();
-      printf("\n%s\n",logBuffer);
+      cout<<format("\n%s\n") % logBuffer;
 
 
       exit(1);
@@ -119,8 +123,8 @@ void activateProgram(unsigned int program)
 
       glGetProgramInfoLog(program,param,NULL,logBuffer);
       checkGLError();
-      printf("\n%s\n",logBuffer);
-      printf("Problem validating the program\n");
+      cout<<format("\n%s\n")%logBuffer;
+      cout<<"Problem validating the program\n";
       exit(1);
    }
 
@@ -134,19 +138,19 @@ void activateProgram(unsigned int program)
 
    glGetProgramInfoLog(program,param,NULL,logBuffer);
    checkGLError();
-   printf("\n%s\n",logBuffer);
+   cout<<format("\n%s\n")%logBuffer;
 
 }
 unsigned int createShader(const std::string &filename, int shaderType)
 {
    std::string theFile = loadFile(filename);
-   printf("I am loading the shader %s\n",filename.c_str());
+   cout<<format("I am loading the shader %s\n")%filename;
 
    unsigned int shader = glCreateShader(shaderType);
    checkGLError();
 
    const char *data = theFile.c_str();
-   glShaderSource(shader,1,&(data),NULL);
+   glShaderSource(shader,1,&data,NULL);
    checkGLError();
 
    glCompileShader(shader);
@@ -158,7 +162,7 @@ unsigned int createShader(const std::string &filename, int shaderType)
 
    if (param == GL_FALSE)
    {
-      //printf("Your shader failed to compile for some reason\n");
+      //cout<<"Your shader failed to compile for some reason\n";
       glGetShaderiv(shader,GL_INFO_LOG_LENGTH,&param);
       checkGLError();
 
@@ -166,8 +170,8 @@ unsigned int createShader(const std::string &filename, int shaderType)
 
       glGetShaderInfoLog(shader,param,NULL,logBuffer);
       checkGLError();
-      //printf("Printing out the log of information...\n\n%s\n",logBuffer);
-      printf("\n%s\n",logBuffer);
+      //cout<<"Printing out the log of information...\n\n%s\n",logBuffer);
+      cout<<format("\n%s\n")%logBuffer;
    }
 
    return shader;

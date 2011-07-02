@@ -5,7 +5,12 @@
 
 #include "algoMaxRects.h"
 
-#include <cstdio>
+#include <iostream>
+#include <boost/format.hpp>
+
+using std::cout;
+using boost::format;
+
 #include <GL/glew.h>
 #include <cstdlib>
 
@@ -83,7 +88,7 @@ void Text::addString(const std::string &text,float x, float y, RenderList &list)
       char ch = text[i];
       MyBox box =  charLocations.find(ch)->second;
       glyphMetric blah = charMetrics.find(ch)->second;
-      //printf("The with was %lf and %lf\n",blah.width,blah.height);
+      //cout<<"The with was %lf and %lf\n",blah.width,blah.height);
 
       blah.raster(width,height);
 
@@ -115,7 +120,7 @@ Text::Text(int textSize , bool subpixel)
 
    if (error)
    {
-      printf("An error in loading the library\n");
+      cout<<"An error in loading the library\n";
       exit(0);
    }
 
@@ -124,7 +129,7 @@ Text::Text(int textSize , bool subpixel)
 
    if (error)
    {
-      printf("An error in loading the face\n");
+      cout<<"An error in loading the face\n";
       exit(0);
    }
 
@@ -134,13 +139,13 @@ Text::Text(int textSize , bool subpixel)
 
    //int emUnits = face->units_per_EM;
    //int numSizes = face->num_fixed_sizes;
-   //printf("The units are %d with %d sizes\n",emUnits,numSizes);
+   //cout<<"The units are %d with %d sizes\n",emUnits,numSizes);
 
    error = FT_Set_Char_Size(face,0,textSize << 6, 96,96);
 
    if (error)
    {
-      printf("An error in loading the face\n");
+      cout<<"An error in loading the face\n";
       exit(0);
    }
 
@@ -159,7 +164,7 @@ Text::Text(int textSize , bool subpixel)
    {
       int glyph = FT_Get_Char_Index(face, character);
 
-      //printf("The piece of %c has an index %d \n",character,glyph);
+      //cout<<"The piece of %c has an index %d \n",character,glyph);
 
       if (subpixel)
       {
@@ -174,7 +179,7 @@ Text::Text(int textSize , bool subpixel)
 
       if (error)
       {
-         printf("An error in loading the face\n");
+         cout<<"An error in loading the face\n";
          exit(0);
       }
 
@@ -182,7 +187,7 @@ Text::Text(int textSize , bool subpixel)
 
       if (error)
       {
-         printf("An error in loading the face\n");
+         cout<<"An error in loading the face\n";
          exit(0);
       }
 
@@ -196,8 +201,8 @@ Text::Text(int textSize , bool subpixel)
 
       charMetrics[character] = blah;
 
-      //printf("The size was %d %d\n\n",face->glyph->bitmap.width, face->glyph->bitmap.rows);
-      //printf("The size was %lf %lf\n\n",blah.width, blah.height);
+      //cout<<"The size was %d %d\n\n",face->glyph->bitmap.width, face->glyph->bitmap.rows);
+      //cout<<"The size was %lf %lf\n\n",blah.width, blah.height);
 
       if (subpixel)
       {
@@ -217,7 +222,7 @@ Text::Text(int textSize , bool subpixel)
    /*
    for (int i = 0 ;i < 26;i++)
    {
-      printf("the thing %d is %d %d\n",i,sizes[i].x,sizes[i].y);
+      cout<<"the thing %d is %d %d\n",i,sizes[i].x,sizes[i].y);
    }
    */
 
@@ -229,14 +234,14 @@ Text::Text(int textSize , bool subpixel)
 
    AlgoMaxRects algo;
    auto theMap = algo.pack(sizes,size,done);
-   printf("\nThe side is %d and %d\n",side,done);
+   cout<<format("\nThe side is %d and %d\n")%side%done;
 
    if (!done)
    {
       side *= 2;
       size = MyVector2(side,side);
       theMap = algo.pack(sizes,size,done);
-      printf("\nThe side is %d and %d\n",side,done);
+      cout<<format("\nThe side is %d and %d\n")%side%done;
    }
 
    char *buffer;
@@ -255,7 +260,7 @@ Text::Text(int textSize , bool subpixel)
 
    if (!buffer)
    {
-      printf("No memory\n");
+      cout<<"No memory\n";
       exit(1);
    }
 
@@ -267,7 +272,7 @@ Text::Text(int textSize , bool subpixel)
 
       if (iter == theMap.end())
       {
-         printf("Not an iter?\n");
+         cout<<"Not an iter?\n";
          continue;
       }
 
@@ -279,8 +284,8 @@ Text::Text(int textSize , bool subpixel)
 
       if (ch == 'A')
       {
-         printf("The character %c at %d %d, with size %d %d in a box of size %d \n",ch,theLocation.x,theLocation.y,theSize.x,theSize.y,side);
-         printf("And it has the thing at %d %d %d %d\n",charLocations[ch].pos.x,charLocations[ch].pos.y,charLocations[ch].size.x,charLocations[ch].size.y);
+         cout<<format("The character %c at %d %d, with size %d %d in a box of size %d \n") % ch % theLocation.x % theLocation.y % theSize.x % theSize.y % side;
+         cout<<format("And it has the thing at %d %d %d %d\n") % charLocations[ch].pos.x % charLocations[ch].pos.y % charLocations[ch].size.x % charLocations[ch].size.y;
       }
 
       for (int y = 0; y< theSize.y-1; y++)
@@ -307,7 +312,7 @@ Text::Text(int textSize , bool subpixel)
 
          }
 
-         // printf("Writing to %d %d\n",(y + theLocation.y),(theSize.x + theLocation.x));
+         // cout<<"Writing to %d %d\n",(y + theLocation.y),(theSize.x + theLocation.x));
          //memcpy(buffer + theLocation.x + (side - 1 - (theLocation.y + y)) * side,image->bitmap.buffer + (y) *(image->bitmap.pitch) ,theSize.x);
       }
 
@@ -318,7 +323,7 @@ Text::Text(int textSize , bool subpixel)
 
    if (error)
    {
-      printf("There was a problem destroying the freetype library\n");
+      cout<<"There was a problem destroying the freetype library\n";
       exit(0);
    }
 
@@ -359,9 +364,9 @@ Text::Text(int textSize , bool subpixel)
       for (int x = 0; x < side;x++)
       {
          for (int i = 0; i < 3;i++)
-         printf("%2d ",(unsigned char)buffer[y * side + x * 4 + i]);
+         cout<<"%2d ",(unsigned char)buffer[y * side + x * 4 + i]);
 
-         printf("   ");
+         cout<<"   ";
       }
       putc('\n',stdout);
    }
@@ -374,71 +379,71 @@ void checkFaceFlags(long faceFlags)
 {
    if (faceFlags & FT_FACE_FLAG_SCALABLE)
    {
-      printf("It is scalable\n");
+      cout<<"It is scalable\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_FIXED_SIZES)
    {
-      printf("It is fixed sizes\n");
+      cout<<"It is fixed sizes\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_FIXED_WIDTH)
    {
-      printf("It is fixed width\n");
+      cout<<"It is fixed width\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_SFNT)
    {
-      printf("It is sfnt?\n");
+      cout<<"It is sfnt?\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_HORIZONTAL)
    {
-      printf("It is horizontal\n");
+      cout<<"It is horizontal\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_VERTICAL)
    {
-      printf("It is vertical\n");
+      cout<<"It is vertical\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_KERNING)
    {
-      printf("It is kerning\n");
+      cout<<"It is kerning\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_FAST_GLYPHS)
    {
-      printf("It is fast glyphs\n");
+      cout<<"It is fast glyphs\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_MULTIPLE_MASTERS)
    {
-      printf("It is multiple masters\n");
+      cout<<"It is multiple masters\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_GLYPH_NAMES)
    {
-      printf("It is glyph names\n");
+      cout<<"It is glyph names\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_EXTERNAL_STREAM)
    {
-      printf("It is external stream\n");
+      cout<<"It is external stream\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_HINTER)
    {
-      printf("It is hinter\n");
+      cout<<"It is hinter\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_CID_KEYED)
    {
-      printf("It is cid keyed\n");
+      cout<<"It is cid keyed\n";
    }
 
    if (faceFlags & FT_FACE_FLAG_TRICKY)
    {
-      printf("It is tricky\n");
+      cout<<"It is tricky\n";
    }
 }
