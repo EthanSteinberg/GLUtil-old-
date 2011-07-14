@@ -14,8 +14,26 @@
 using std::cout;
 using boost::format;
 
+struct testing
+{
+   int b;
+   int a;
+   friend std::ostream& operator<< (std::ostream& out, testing const& t);
+
+};
+
+std::ostream& operator<< (std::ostream& out, testing const& t)
+{
+   return out<< format("%d %d") % t.b % t.a;
+}
+
 int main(int argv, char **argc)
 {
+   testing f;
+   f.b = 10;
+   f.a = 20;
+   cout<<format("%d \n") % f;
+
    sf::Window App(sf::VideoMode(800,600,32),"SFML OpenGL");
    App.SetFramerateLimit(60);
 
