@@ -1,42 +1,19 @@
-#ifndef TEXH_INCLUDED
-#define TEXH_INCLUDED
+#ifndef TEXT_H_INCLUDED
+#define TEXT_H_INCLUDED
 
 #include <string>
 #include <map>
 #include "myBox.h"
 #include "renderList.h"
 
-class Text;
-
-class TextList
-{
-public:
-   TextList(const Text &_base);
-
-   void addString(const std::string &text,float x, float y);
-   void draw() const;
-   void clear();
-
-private:
-   const Text &base;
-   RenderList list;
-};
-
 class Text
 {
 public:
 
 
-   Text(int textSize = 14, bool subpixel = false);
-   void drawString(const std::string &text,float x, float y );
-   void addString(const std::string &text,float x , float y ,RenderList &list) const;
-   void draw(const RenderList &list) const;
-   void setSize(int width, int height);
+   Text(int textSize = 14);
 
-private:
-
-   int width;
-   int height;
+   const std::string& getFilename() const;
 
    struct glyphMetric
    {
@@ -61,7 +38,16 @@ private:
    std::map<char,MyBox> charLocations;
    std::map<char,glyphMetric> charMetrics;
    int side;
-   unsigned int texture;
+
+private:
+
+   std::string filename;
+
+
+   //unsigned int texture;
+   
+   //Render &renderer;
+
 };
 
 

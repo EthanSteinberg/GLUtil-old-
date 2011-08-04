@@ -4,7 +4,9 @@
 #include "glUtil.h"
 #include <cstring>
 
-RenderList::RenderList()
+#include "render.h"
+
+RenderList::RenderList(Render &render) : renderer(render)
 {
 }
    void RenderList::addPoint(float x, float y, float z, float textX,float textY)
@@ -32,11 +34,7 @@ void RenderList::addRect(float x1,float y1, float z1, float textX1, float textY1
 
    void RenderList::draw() const 
 {
-   glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size() * sizeof(inputData),&vertices[0]);
-   checkGLError();
-
-   glDrawElements(GL_TRIANGLES,6 * vertices.size()/4,GL_UNSIGNED_SHORT,0);
-   checkGLError();
+   renderer.drawVertices(vertices);
 }
 
 void RenderList::clear()

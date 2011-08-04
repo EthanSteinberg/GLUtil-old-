@@ -1,8 +1,6 @@
 #include "text.h"
-#include <cassert>
-#include <cmath>
 #include "myVector2.h"
-
+#include "render.h"
 #include "algoMaxRects.h"
 
 #include <iostream>
@@ -11,12 +9,15 @@
 using std::cout;
 using boost::format;
 
-#include <GL/glew.h>
-#include <cstdlib>
-
 #include <ft2build.h>
 
-#include "../util/glUtil.h"
+#include <CImg.h>
+using namespace cimg_library;
+
+#include "distanceMap.h"
+
+const int padding = 1;
+
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 void checkFaceFlags(long faceFlags);
@@ -34,87 +35,14 @@ T nexthigher(T k)
    return k+1;
 }
 
-TextList::TextList(const Text &_base) : base(_base)
-{}
 
-void TextList::addString(const std::string &text,float x, float y)
+const std::string &Text::getFilename() const
 {
-   base.addString(text,x,y,list);
-}
-void TextList::draw() const 
-{
-   base.draw(list);
-}
-void TextList::clear()
-{
-   list.clear();
+   return filename;
 }
 
-
-void Text::draw(const RenderList &list) const
+Text::Text(int textSize)
 {
-   int lastTexture;
-   glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
-   checkGLError();
-
-   glBindTexture(GL_TEXTURE_2D,texture);
-   checkGLError();
-
-   list.draw();
-
-
-   glBindTexture(GL_TEXTURE_2D,lastTexture);
-   checkGLError();
-}
-
-void Text::setSize(int _width,int _height)
-{
-   width = _width;
-   height = _height;
-}
-
-void Text::drawString(const std::string &text, float x, float y)
-{
-   TextList textList(*this);
-
-   textList.addString(text,x,y);
-   textList.draw();
-}
-
-void Text::addString(const std::string &text,float x, float y, RenderList &list) const
-{
-   for (unsigned int i = 0; i < text.length(); i++)
-   {
-      char ch = text[i];
-      MyBox box =  charLocations.find(ch)->second;
-      glyphMetric blah = charMetrics.find(ch)->second;
-      //cout<<"The with was %lf and %lf\n",blah.width,blah.height);
-
-      blah.raster(width,height);
-
-      x+= 100 * blah.bearingX;
-      y-= 100 * (blah.height - blah.bearingY);
-
-      list.addRect(x,y,0,(float) box.pos.x/side, (float) box.pos.y/side,
-                   x+ 100 * blah.width,y + 100 * blah.height,0, (float)(box.pos.x + box.size.x)/side, (float)(box.pos.y + box.size.y)/side);
-
-      x+= 100 * (blah.advance - blah.bearingX);
-      y+= 100 * (blah.height - blah.bearingY);
-   }
-}
-
-
-Text::Text(int textSize , bool subpixel)
-{
-   int lastTexture;
-   glGetIntegerv(GL_TEXTURE_BINDING_2D,&lastTexture);
-
-   glGenTextures(1,&texture);
-   checkGLError();
-
-   glBindTexture(GL_TEXTURE_2D,texture);
-   checkGLError();
-
    FT_Library lib;
    int error = FT_Init_FreeType(&lib);
 
@@ -166,15 +94,7 @@ Text::Text(int textSize , bool subpixel)
 
       //cout<<"The piece of %c has an index %d \n",character,glyph);
 
-      if (subpixel)
-      {
-         error = FT_Load_Glyph(face,glyph, FT_LOAD_RENDER  | FT_LOAD_TARGET_LCD);
-      }
-
-      else
-      {
-         error = FT_Load_Glyph(face,glyph, FT_LOAD_RENDER);
-      }
+      error = FT_Load_Glyph(face,glyph, FT_LOAD_RENDER);
 
 
       if (error)
@@ -204,17 +124,11 @@ Text::Text(int textSize , bool subpixel)
       //cout<<"The size was %d %d\n\n",face->glyph->bitmap.width, face->glyph->bitmap.rows);
       //cout<<"The size was %lf %lf\n\n",blah.width, blah.height);
 
-      if (subpixel)
-      {
-         sizes[character - start] = MyVector2(face->glyph->bitmap.width/3+1, face->glyph->bitmap.rows+1);
-         area += face->glyph->bitmap.width/3 * face->glyph->bitmap.rows;
-      }
 
-      else
-      {
-         sizes[character - start] = MyVector2(face->glyph->bitmap.width+1, face->glyph->bitmap.rows+1);
-         area += face->glyph->bitmap.width * face->glyph->bitmap.rows;
-      }
+
+      MyVector2 theSize = MyVector2(face->glyph->bitmap.width+padding, face->glyph->bitmap.rows+padding);
+      sizes[character - start] = theSize;
+      area += theSize.x * theSize.y;
 
 
    }
@@ -244,18 +158,9 @@ Text::Text(int textSize , bool subpixel)
       cout<<format("\nThe side is %d and %d\n")%side%done;
    }
 
-   char *buffer;
+   unsigned char *buffer;
 
-   //buffer = new char[side * side];
-   if (subpixel)
-   {
-      buffer = (char *)calloc(side * side * 4,1);
-   }
-
-   else
-   {
-      buffer = (char *)calloc(side * side,1);
-   }
+   buffer = (unsigned char *)calloc(side * side,1);
 
 
    if (!buffer)
@@ -288,26 +193,12 @@ Text::Text(int textSize , bool subpixel)
          cout<<format("And it has the thing at %d %d %d %d\n") % charLocations[ch].pos.x % charLocations[ch].pos.y % charLocations[ch].size.x % charLocations[ch].size.y;
       }
 
-      for (int y = 0; y< theSize.y-1; y++)
+      for (int y = 0; y< theSize.y-padding; y++)
       {
 
-         for (int x = 0; x < theSize.x-1; x++)
+         for (int x = 0; x < theSize.x-padding; x++)
          {
-            if (subpixel)
-            {
-               int r  =  image->bitmap.buffer[(y) * (image->bitmap.pitch) + x*3+0];
-               int g  =  image->bitmap.buffer[(y) * (image->bitmap.pitch) + x*3+1];
-               int b  =  image->bitmap.buffer[(y) * (image->bitmap.pitch) + x*3+2];
-               buffer[theLocation.x*4 + (side -1 - (theLocation.y + y)) * side * 4 +x * 4 + 0] =  r;
-               buffer[theLocation.x*4 + (side -1 - (theLocation.y + y)) * side * 4 +x * 4 + 1] =  g;
-               buffer[theLocation.x*4 + (side -1 - (theLocation.y + y)) * side * 4 +x * 4 + 2] =  b;
-               buffer[theLocation.x*4 + (side -1 - (theLocation.y + y)) * side * 4 +x * 4 + 3] = (r+ g +b)/3 ;
-            }
-
-            else
-            {
-               buffer[theLocation.x + (side -1 - (theLocation.y + y)) * side +x ] =  image->bitmap.buffer[(y) * (image->bitmap.pitch) + x];
-            }
+            buffer[theLocation.x + x + padding/2 + (side -1 - (theLocation.y + y + padding/2)) * side] = image->bitmap.buffer[(y) * (image->bitmap.pitch) + x];
 
 
          }
@@ -328,50 +219,15 @@ Text::Text(int textSize , bool subpixel)
    }
 
 
-   if (subpixel)
-   {
-      glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,side,side,0,GL_RGBA,GL_UNSIGNED_BYTE,buffer);
-   }
 
-   else
-   {
-      glTexImage2D(GL_TEXTURE_2D,0,GL_ALPHA,side,side,0,GL_ALPHA,GL_UNSIGNED_BYTE,buffer);
-   }
+   buffer = make_distance_map(buffer, side, side);
 
-   checkGLError();
+   CImg<unsigned char> textOut(buffer,side,side);
+   textOut.save_png("/tmp/glutiltext.png");
+   filename = "/tmp/glutiltext.png";
+
 
    free(buffer);
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-   checkGLError();
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   checkGLError();
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-   checkGLError();
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-   checkGLError();
-
-   glBindTexture(GL_TEXTURE_2D,lastTexture);
-   checkGLError();
-
-   /*
-
-   for (int y = 0; y < side;y++)
-   {
-      for (int x = 0; x < side;x++)
-      {
-         for (int i = 0; i < 3;i++)
-         cout<<"%2d ",(unsigned char)buffer[y * side + x * 4 + i]);
-
-         cout<<"   ";
-      }
-      putc('\n',stdout);
-   }
-   */
-
 
 }
 

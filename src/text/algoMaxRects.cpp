@@ -18,8 +18,6 @@ in the file COPYING.
 #include <set>
 #include <boost/foreach.hpp>
 #include <list>
-#include <boost/scoped_ptr.hpp>
-
 #include <algorithm>
 
 #include <assert.h>
@@ -102,18 +100,18 @@ std::multimap<MyVector2, MyVector2> AlgoMaxRects::pack(const std::vector< MyVect
 
 
       MyVector2 a1 = insertedBox.pos;
-      MyVector2 a2 = MyVector2(insertedBox.pos.x + insertedBox.size.x,insertedBox.pos.y);
+      //MyVector2 a2 = MyVector2(insertedBox.pos.x + insertedBox.size.x,insertedBox.pos.y);
       MyVector2 a3 = MyVector2(insertedBox.pos.x + insertedBox.size.x,insertedBox.pos.y + insertedBox.size.y);
-      MyVector2 a4 = MyVector2(insertedBox.pos.x                     ,insertedBox.pos.y + insertedBox.size.y);
+      //MyVector2 a4 = MyVector2(insertedBox.pos.x                     ,insertedBox.pos.y + insertedBox.size.y);
 
       for (auto iterFreeBoxes = freeBoxes.begin(); iterFreeBoxes != freeBoxes.end();)
       {
          assert(iterFreeBoxes != freeBoxes.end());
          //assert(!(iterFreeBoxes->pos == insertedBox.pos));
          MyVector2 b1 = iterFreeBoxes->pos;
-         MyVector2 b2 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y);
+         //MyVector2 b2 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y);
          MyVector2 b3 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
-         MyVector2 b4 = MyVector2(iterFreeBoxes->pos.x                        ,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
+         //MyVector2 b4 = MyVector2(iterFreeBoxes->pos.x                        ,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
 
          if ((a1.x >= b3.x) || (a1.y >= b3.y) ||
                (a3.x <= b1.x) || (a3.y <= b1.y))
@@ -195,14 +193,14 @@ std::multimap<MyVector2, MyVector2> AlgoMaxRects::pack(const std::vector< MyVect
             //assert(!((*iterFreeBoxes).pos == (*iterFreeBoxes2).pos));
 
             MyVector2 b1 = iterFreeBoxes->pos;
-            MyVector2 b2 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y);
+            //MyVector2 b2 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y);
             MyVector2 b3 = MyVector2(iterFreeBoxes->pos.x + iterFreeBoxes->size.x,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
-            MyVector2 b4 = MyVector2(iterFreeBoxes->pos.x                        ,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
+            //MyVector2 b4 = MyVector2(iterFreeBoxes->pos.x                        ,iterFreeBoxes->pos.y + iterFreeBoxes->size.y);
 
             MyVector2 c1 = iterFreeBoxes2->pos;
-            MyVector2 c2 = MyVector2(iterFreeBoxes2->pos.x + iterFreeBoxes2->size.x,iterFreeBoxes2->pos.y);
+            //MyVector2 c2 = MyVector2(iterFreeBoxes2->pos.x + iterFreeBoxes2->size.x,iterFreeBoxes2->pos.y);
             MyVector2 c3 = MyVector2(iterFreeBoxes2->pos.x + iterFreeBoxes2->size.x,iterFreeBoxes2->pos.y + iterFreeBoxes2->size.y);
-            MyVector2 c4 = MyVector2(iterFreeBoxes2->pos.x                         ,iterFreeBoxes2->pos.y + iterFreeBoxes2->size.y);
+            //MyVector2 c4 = MyVector2(iterFreeBoxes2->pos.x                         ,iterFreeBoxes2->pos.y + iterFreeBoxes2->size.y);
 
             if (c1.x >= b1.x && c1.y >= b1.y &&
                   c3.x <= b3.x && c3.y <= b3.y)

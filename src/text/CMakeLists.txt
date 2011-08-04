@@ -5,14 +5,21 @@ myBox.h
 myVector2.h
 pixelAlgo.h
 text.h
+textList.h
+
+distanceMap.h
       
    )
  
 set(SRCS
    text.cpp
+   textList.cpp
    algoMaxRects.cpp
    myBox.cpp
    myVector2.cpp
+
+   distanceMap.cpp
+
 )
  
 add_library(textUtil ${HDRS} ${SRCS})

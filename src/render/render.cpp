@@ -4,8 +4,11 @@
 #include <GL/glew.h>
 
 #include <vector>
-#include "pngUtil.h"
+#include "imageUtil.h"
 #include "matrix.h"
+
+#include "renderList.h"
+
 
 inline
 void *offset(int floatNum)
@@ -82,6 +85,7 @@ void Render::createAndBindBuffers(int numOfRects)
 
    glBindAttribLocation(program,3,"in_ZRotation");
    checkGLError();
+
 }
 
 Render::Render(const std::string &frag, const std::string &vert, int numOfRects)
@@ -111,6 +115,11 @@ void Render::bindTexture()
    int texturePosition = glGetUniformLocation(program,"in_Texture");
    checkGLError();
    glUniform1i(texturePosition,0);
+   checkGLError();
+
+   textRenderModePosition = glGetUniformLocation(program,"textRenderMode");
+   checkGLError();
+   glUniform1i(textRenderModePosition,0);
    checkGLError();
 }
 
@@ -147,3 +156,19 @@ void Render::perspectiveOrtho(double left,double right,double bottom, double top
    glUniformMatrix4fv(perspectivePosition,1,false,matrix);
    checkGLError();
 }
+
+void Render::setTextRenderMode(bool mode)
+{
+   glUniform1i(textRenderModePosition,mode);
+   checkGLError();
+}
+
+  void Render::drawVertices(const std::vector<inputData> &vertices)
+{
+   glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size() * sizeof(inputData),&vertices[0]);
+   checkGLError();
+
+   glDrawElements(GL_TRIANGLES,6 * vertices.size()/4,GL_UNSIGNED_SHORT,0);
+   checkGLError();
+}
+

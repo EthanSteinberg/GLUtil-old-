@@ -7,11 +7,26 @@ in float in_ZRotation;
 
 out vec2 mid_TextCord;
 
+out float onestepu, onestepv;
+
 uniform mat4 in_ProjectionMatrix;
+uniform sampler2D in_Texture;
+uniform bool textRenderMode;
 
 void main(void)
 {
+
+if (textRenderMode)
+{
+ivec2 size = textureSize(in_Texture,0);
+
+int texw = size.x * 2;
+int texh = size.y * 2;
+  onestepu = 1.0 / texw; // Saves a division in the fragment shader
+  onestepv = 1.0 / texh;
+   }
    mid_TextCord = in_TextCord;
+
    float ZRotation = radians(in_ZRotation);
 
    vec4 position = vec4(in_Position,1);

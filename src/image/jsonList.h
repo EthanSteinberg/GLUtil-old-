@@ -1,22 +1,24 @@
-#ifndef PNG_LISH_INCLUDED
-#define PNG_LISH_INCLUDED
+#ifndef JSON_LIST_H_INCLUDED
+#define JSON_LIST_H_INCLUDED
 
-#include <string>
 #include "renderList.h"
-#include "pngJson.h"
 
+class ImageJson;
 
-class PngList 
+class JsonList
 {
+
 public:
-   PngList(const PngJson &base);
+   JsonList(Render &render,const ImageJson &_base);
+
    void addImage(const std::string &name,float x, float y,float scale);
+
    void draw() const;
    void clear();
 
 private:
+   const ImageJson &base;
    RenderList list;
-   const PngJson &base;
 };
 
 #endif
