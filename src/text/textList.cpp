@@ -14,7 +14,7 @@ void TextList::addString(const std::string &text,float x, float y)
       Text::glyphMetric blah = base.charMetrics.find(ch)->second;
       //cout<<"The with was %lf and %lf\n",blah.width,blah.height);
 
-      blah.raster(list.renderer.width,list.renderer.height);
+      blah.raster(list.renderer.getWidth(),list.renderer.getHeight());
 
       x+= 100 * blah.bearingX;
       y-= 100 * (blah.height - blah.bearingY);

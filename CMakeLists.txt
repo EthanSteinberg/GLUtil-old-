@@ -7,7 +7,9 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall -march=native -std=c++0x  -g -O0 -Wshadow")
+set(CMAKE_CXX_FLAGS_DEBUG "-Wall -march=native -std=c++0x  -g3 -O0 -Wshadow -std=c++0x -pedantic -Wextra")
+
+
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")	
 
@@ -32,8 +34,10 @@ include_directories(${GLEW_INCLUDE_PATH})
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_PATH})
 
+find_package(GTK3 3.0 COMPONENTS  gtk gtkmm)
+include_directories(${GTK3_INCLUDE_DIRS})
+
 find_package(PNG REQUIRED)
-include_directories(${PNG_INCLUDE_DIR})
 
 include_directories(lib/jsoncpp-src-0.5.0/include)
 

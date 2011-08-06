@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include "imageJson.h"
 #include <json/json.h>
 

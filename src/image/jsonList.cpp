@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include "jsonList.h"
 
 #include "imageJson.h"
@@ -41,8 +40,8 @@ void JsonList::addImage(const std::string &name,float x, float y,float scale)
    //           x + imageSizeX/scale,y + imageSizeY/scale,0,1,1);
    //
 
-   const float translateX = (imageSizeX/scale)/list.renderer.width;
-   const float translateY = (imageSizeY/scale)/list.renderer.height;
+   const float translateX = (imageSizeX/scale)/list.renderer.getWidth();
+   const float translateY = (imageSizeY/scale)/list.renderer.getHeight();
    //cout<<"The translate is %f\n",translateX);
 
    list.addRect(x, y, 0,imageX/sidex,(imageY + imageSizeY)/sidey,

@@ -9,12 +9,38 @@
 
 #include "renderList.h"
 
+#include <cassert>
+
 
 inline
 void *offset(int floatNum)
 {
    return (void *)(sizeof(float) * floatNum);
 }
+
+int Render::getWidth() const
+{
+   return width;
+}
+
+int Render::getHeight() const
+{
+   return height;
+}
+
+void Render::setSize(int _width,int _height)
+{
+   assert(initialized);
+
+   width = _width;
+   height = _height;
+
+   glViewport(0,0,_width, _height);
+
+}
+
+Render::Render() : initialized(false)
+{}
 
 void Render::createAndBindBuffers(int numOfRects)
 {
@@ -88,9 +114,9 @@ void Render::createAndBindBuffers(int numOfRects)
 
 }
 
-Render::Render(const std::string &frag, const std::string &vert, int numOfRects)
+void Render::initialize(const std::string &frag, const std::string &vert, int numOfRects)
 {
-
+   initialized = true;
    GLuint vertShader = createShader(vert, GL_VERTEX_SHADER);
    GLuint fragShader = createShader(frag, GL_FRAGMENT_SHADER);
    program = createProgram(vertShader,fragShader);
@@ -102,6 +128,11 @@ Render::Render(const std::string &frag, const std::string &vert, int numOfRects)
    createAndBindBuffers(numOfRects);
    activateProgram(program);
    bindTexture();
+}
+
+Render::Render(const std::string &frag, const std::string &vert, int numOfRects)
+{
+   initialize(frag,vert,numOfRects);
 }
 
 void Render::bindTexture()
@@ -126,6 +157,7 @@ void Render::bindTexture()
 
 void Render::loadImage(const std::string &filename)
 {
+   assert(initialized);
    if (textMap.count(filename) == 0)
    {
       unsigned int texture;
@@ -147,11 +179,12 @@ void Render::loadImage(const std::string &filename)
 }
 void Render::perspectiveOrtho(double left,double right,double bottom, double top, double near, double far)
 {
+   assert(initialized);
    int perspectivePosition = glGetUniformLocation(program,"in_ProjectionMatrix");
    checkGLError();
 
    float matrix[16] = {};
-   makeOrtho(0,100,100,0,-5,5,matrix);
+   makeOrtho(left,right,bottom,top,near,far,matrix);
 
    glUniformMatrix4fv(perspectivePosition,1,false,matrix);
    checkGLError();
@@ -159,12 +192,14 @@ void Render::perspectiveOrtho(double left,double right,double bottom, double top
 
 void Render::setTextRenderMode(bool mode)
 {
+   assert(initialized);
    glUniform1i(textRenderModePosition,mode);
    checkGLError();
 }
 
   void Render::drawVertices(const std::vector<inputData> &vertices)
 {
+   assert(initialized);
    glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size() * sizeof(inputData),&vertices[0]);
    checkGLError();
 

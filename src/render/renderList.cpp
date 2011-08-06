@@ -1,6 +1,5 @@
 #include "renderList.h"
 
-#include <GL/glew.h>
 #include "glUtil.h"
 #include <cstring>
 
@@ -24,7 +23,7 @@ RenderList::RenderList(Render &render) : renderer(render)
 }
 
 void RenderList::addRect(float x1,float y1, float z1, float textX1, float textY1,
-                           float x2,float y2, float z2, float textX2, float textY2)
+                           float x2,float y2, float /*z2*/, float textX2, float textY2)
 {
    addPoint(x1,y1,z1,textX1,textY1);
    addPoint(x1,y2,z1,textX1,textY2);
