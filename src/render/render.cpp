@@ -2,6 +2,8 @@
 
 #include "glUtil.h"
 #include <GL/glew.h>
+#include <iostream>
+#include <boost/format.hpp>
 
 #include <vector>
 #include "imageUtil.h"
@@ -16,6 +18,16 @@ inline
 void *offset(int floatNum)
 {
    return (void *)(sizeof(float) * floatNum);
+}
+
+void Render::setClearColor(float red,float green, float blue, float alpha)
+{
+   glClearColor(red,green,blue,alpha);
+}
+
+void Render::clear()
+{
+   glClear(GL_COLOR_BUFFER_BIT);
 }
 
 int Render::getWidth() const
@@ -117,7 +129,17 @@ void Render::createAndBindBuffers(int numOfRects)
 void Render::initialize(const std::string &frag, const std::string &vert, int numOfRects)
 {
    initialized = true;
-   GLuint vertShader = createShader(vert, GL_VERTEX_SHADER);
+   GLenum err = glewInit();
+
+      if (GLEW_OK != err)
+      {
+         std::cout<<boost::format("Glew error: %s\n") % glewGetErrorString(err);
+         exit(1);
+      }
+
+      std::cout<<boost::format("Status: Using GLEW %s\n") % glewGetString(GLEW_VERSION);
+   
+      GLuint vertShader = createShader(vert, GL_VERTEX_SHADER);
    GLuint fragShader = createShader(frag, GL_FRAGMENT_SHADER);
    program = createProgram(vertShader,fragShader);
 

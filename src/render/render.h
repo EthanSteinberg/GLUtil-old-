@@ -22,6 +22,9 @@ public:
    int getHeight() const;
    void initialize(const std::string &frag, const std::string &vert, int numOfRects = 100);
 
+   void clear();
+   void setClearColor(float red,float green, float blue, float alpha);
+
 private:
 
    int width;

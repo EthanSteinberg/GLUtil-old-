@@ -1,5 +1,3 @@
-#include <GL/glew.h>
-
 #include <iostream>
 
 #include <boost/format.hpp>
@@ -40,21 +38,12 @@ public:
    {
       app.SetFramerateLimit(60);
 
-      GLenum err = glewInit();
-
-      if (GLEW_OK != err)
-      {
-         cout<<format("Glew error: %s\n") % glewGetErrorString(err);
-         exit(1);
-      }
-
-      cout<<format("Status: Using GLEW %s\n") % glewGetString(GLEW_VERSION);
       render.initialize("../res/frag","../res/vert");
       render.setSize(800,800);
       area.set_size_request(800,800);
       render.perspectiveOrtho(0,100,100, 0, -5, 5);
 
-      glClearColor(0,.5,.5,0);
+      render.setClearColor(0,.5,.5,0);
 
       jsonList.addImage("5",10,10,1);
 
@@ -98,8 +87,7 @@ public:
          }
       }
 
-      glClear(GL_COLOR_BUFFER_BIT);
-
+      render.clear();
       list.draw();
       lazyDogText.draw();
       jsonList.draw();
