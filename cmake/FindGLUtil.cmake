@@ -20,6 +20,7 @@ find_path(GLUtil_INCLUDE_DIR
 set (
    GLUtil_COMPONENTS
   textUtil
+   imageUtil
   renderUtil
    imageUtil
    threadUtil
